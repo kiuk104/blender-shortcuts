@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blender 3.0 단축키 레퍼런스</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #151926;
+            --bg-tertiary: #1e2433;
+            --accent-orange: #ff6b35;
+            --accent-blue: #4ecdc4;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --accent-green: #22c55e;
+            --accent-yellow: #eab308;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --border: #2a3142;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(78, 205, 196, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(78, 205, 196, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .blender-logo {
+            width: 80px;
+            height: 80px;
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 30px 0;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: rgba(10, 14, 26, 0.95);
+            padding: 15px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: var(--bg-primary);
+        }
+
+        .shortcuts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .category-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            animation: slideUp 0.6s ease-out backwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .category-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .category-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .shortcut-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            gap: 15px;
+        }
+
+        .shortcut-item:hover {
+            transform: translateX(5px);
+            background: rgba(78, 205, 196, 0.1);
+        }
+
+        .shortcut-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            flex: 1;
+        }
+
+        .shortcut-keys {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: flex-end;
+        }
+
+        .key {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            padding: 5px 10px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            box-shadow: 0 2px 0 var(--border);
+            white-space: nowrap;
+        }
+
+        .key-separator {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 카테고리별 색상 */
+        .cat-general .category-icon { background: linear-gradient(135deg, #ff6b35, #ff8f6b); }
+        .cat-navigation .category-icon { background: linear-gradient(135deg, #4ecdc4, #7eddd6); }
+        .cat-view .category-icon { background: linear-gradient(135deg, #a855f7, #c084fc); }
+        .cat-object .category-icon { background: linear-gradient(135deg, #22c55e, #4ade80); }
+        .cat-selection .category-icon { background: linear-gradient(135deg, #eab308, #facc15); }
+        .cat-shading .category-icon { background: linear-gradient(135deg, #ec4899, #f472b6); }
+        .cat-pie .category-icon { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
+        .cat-editselect .category-icon { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+        .cat-curve .category-icon { background: linear-gradient(135deg, #f97316, #fb923c); }
+        .cat-modeling .category-icon { background: linear-gradient(135deg, #14b8a6, #2dd4bf); }
+        .cat-texture .category-icon { background: linear-gradient(135deg, #d946ef, #e879f9); }
+        .cat-uv .category-icon { background: linear-gradient(135deg, #0ea5e9, #38bdf8); }
+        .cat-image .category-icon { background: linear-gradient(135deg, #84cc16, #a3e635); }
+        .cat-nodes .category-icon { background: linear-gradient(135deg, #f43f5e, #fb7185); }
+        .cat-sculpt .category-icon { background: linear-gradient(135deg, #6366f1, #818cf8); }
+        .cat-render .category-icon { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .cat-animation .category-icon { background: linear-gradient(135deg, #10b981, #34d399); }
+        .cat-rigging .category-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .cat-posing .category-icon { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+        .cat-window .category-icon { background: linear-gradient(135deg, #64748b, #94a3b8); }
+
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .shortcuts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                position: relative;
+                top: 0;
+            }
+
+            .filter-buttons {
+                max-height: 150px;
+                overflow-y: auto;
+            }
+
+            .shortcut-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .shortcut-keys {
+                justify-content: flex-start;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* 스크롤바 스타일 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <svg class="blender-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="blenderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff6b35"/>
+                            <stop offset="100%" style="stop-color:#f5792a"/>
+                        </linearGradient>
+                    </defs>
+                    <ellipse cx="50" cy="55" rx="35" ry="25" fill="url(#blenderGrad)"/>
+                    <ellipse cx="50" cy="55" rx="12" ry="9" fill="#1e2433"/>
+                    <ellipse cx="50" cy="55" rx="5" ry="4" fill="#4ecdc4"/>
+                    <path d="M15 50 Q5 50 15 55 L35 55 Q25 52 35 50 Z" fill="url(#blenderGrad)"/>
+                    <circle cx="28" cy="45" r="6" fill="url(#blenderGrad)"/>
+                </svg>
+                <h1>BLENDER 3.0 SHORTCUTS</h1>
+            </div>
+            <p class="subtitle">Blender Guru의 완전한 단축키 레퍼런스 v1.2</p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalShortcuts">0</div>
+                    <div class="stat-label">전체 단축키</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalCategories">0</div>
+                    <div class="stat-label">카테고리</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 단축키 또는 기능 검색..." autocomplete="off">
+            </div>
+            <div class="filter-buttons" id="filterButtons">
+                <button class="filter-btn active" data-category="all">전체</button>
+            </div>
+        </div>
+
+        <div class="shortcuts-container" id="shortcutsContainer">
+        </div>
+
+        <div class="no-results hidden" id="noResults">
+            검색 결과가 없습니다 😢
+        </div>
+
+        <footer>
+            <p>Based on Blender 3.0 Keyboard Shortcuts v1.2 by Blender Guru (2021)</p>
+        </footer>
+    </div>
+
+    <script>
+        // 단축키 데이터
+        const shortcutsData = [
+            {
+                category: "general",
+                title: "일반 (대부분의 창)",
+                icon: "⚙️",
+                shortcuts: [
+                    { keys: ["T"], desc: "툴바" },
+                    { keys: ["N"], desc: "속성 패널" },
+                    { keys: ["Shift", "A"], desc: "오브젝트/노드 추가" },
+                    { keys: ["X", "또는", "Delete"], desc: "삭제" },
+                    { keys: ["F3"], desc: "기능 검색" },
+                    { keys: ["G"], desc: "이동" },
+                    { keys: ["S"], desc: "크기 조절" },
+                    { keys: ["R"], desc: "회전" },
+                    { keys: ["_", "→", "X/Y/Z"], desc: "축을 따라 변형" },
+                    { keys: ["_", "→", "X,X/Y,Y/Z,Z"], desc: "로컬 축을 따라 변형" },
+                    { keys: ["R", "R"], desc: "트랙볼 회전" },
+                    { keys: ["Shift", "(유지)"], desc: "정밀 이동" },
+                    { keys: ["Ctrl", "(유지)"], desc: "증분 이동" },
+                    { keys: ["Shift", "D"], desc: "복제" },
+                    { keys: ["Alt", "D"], desc: "링크 복제" },
+                    { keys: ["H"], desc: "숨기기" },
+                    { keys: ["Alt", "H"], desc: "전체 표시" },
+                    { keys: ["Shift", "H"], desc: "선택 외 모두 숨기기" },
+                    { keys: ["D(유지)", "+", "LMB(드래그)"], desc: "주석 달기" },
+                    { keys: ["D(유지)", "+", "RMB(드래그)"], desc: "주석 지우기" },
+                    { keys: ["Q"], desc: "즐겨찾기 메뉴" }
+                ]
+            },
+            {
+                category: "navigation",
+                title: "네비게이션 (3D 뷰포트)",
+                icon: "🧭",
+                shortcuts: [
+                    { keys: ["MMB"], desc: "오빗 (회전)" },
+                    { keys: ["Shift", "MMB"], desc: "팬 (이동)" },
+                    { keys: ["Scroll", "또는", "Ctrl+MMB"], desc: "줌 인/아웃" },
+                    { keys: ["Shift", "~"], desc: "플라이 모드" }
+                ]
+            },
+            {
+                category: "view",
+                title: "뷰 (3D 뷰포트)",
+                icon: "👁️",
+                shortcuts: [
+                    { keys: ["Numpad /"], desc: "격리 보기" },
+                    { keys: ["Numpad 7"], desc: "탑 뷰" },
+                    { keys: ["Numpad 8"], desc: "위로" },
+                    { keys: ["Numpad 9"], desc: "반대편" },
+                    { keys: ["Numpad 4"], desc: "왼쪽" },
+                    { keys: ["Numpad 5"], desc: "원근/직교 토글" },
+                    { keys: ["Numpad 6"], desc: "오른쪽" },
+                    { keys: ["Numpad 1"], desc: "프론트 뷰" },
+                    { keys: ["Numpad 2"], desc: "아래로" },
+                    { keys: ["Numpad 3"], desc: "사이드 뷰" },
+                    { keys: ["Numpad 0"], desc: "카메라 뷰" },
+                    { keys: ["Numpad ."], desc: "선택에 포커스" },
+                    { keys: ["~"], desc: "뷰 파이 메뉴" },
+                    { keys: ["Alt", "MMB(드래그)"], desc: "빠른 뷰 전환" },
+                    { keys: ["Home"], desc: "전체 오브젝트 보기" },
+                    { keys: ["Shift", "B"], desc: "영역 확대" }
+                ]
+            },
+            {
+                category: "object",
+                title: "오브젝트 모드 (3D 뷰포트)",
+                icon: "📦",
+                shortcuts: [
+                    { keys: ["Ctrl", "TAB"], desc: "모드 파이 메뉴" },
+                    { keys: ["TAB"], desc: "편집/오브젝트 모드 토글" },
+                    { keys: ["Ctrl", "M", "→", "X/Y/Z"], desc: "미러" },
+                    { keys: ["Ctrl", "P"], desc: "부모 설정" },
+                    { keys: ["Alt", "P"], desc: "부모 해제" },
+                    { keys: ["Shift", "TAB"], desc: "스냅 토글" },
+                    { keys: ["Alt", "G"], desc: "위치 초기화" },
+                    { keys: ["Alt", "R"], desc: "회전 초기화" },
+                    { keys: ["Alt", "S"], desc: "크기 초기화" },
+                    { keys: ["Ctrl", "A"], desc: "위치/크기/회전 적용" },
+                    { keys: ["Ctrl", "J"], desc: "선택 오브젝트 합치기" },
+                    { keys: ["Ctrl", "L"], desc: "속성 복사" },
+                    { keys: ["Ctrl", "0~5"], desc: "서브디비전 레벨 추가" },
+                    { keys: ["Alt", "B"], desc: "영역 마스크/해제" },
+                    { keys: ["Shift", "C"], desc: "3D 커서 중앙으로" },
+                    { keys: ["M"], desc: "컬렉션으로 이동" },
+                    { keys: ["Ctrl", "Alt", "Numpad 0"], desc: "활성 카메라를 뷰로 이동" },
+                    { keys: ["Ctrl", "Numpad 0"], desc: "활성 카메라로 설정" }
+                ]
+            },
+            {
+                category: "selection",
+                title: "일반 선택 (대부분의 창)",
+                icon: "🎯",
+                shortcuts: [
+                    { keys: ["LMB"], desc: "선택" },
+                    { keys: ["A"], desc: "전체 선택" },
+                    { keys: ["Alt", "A", "또는", "A,A"], desc: "전체 선택 해제" },
+                    { keys: ["B", "또는", "LMB(드래그)"], desc: "박스 선택" },
+                    { keys: ["C"], desc: "서클 선택" },
+                    { keys: ["Ctrl", "RMB"], desc: "올가미 선택" },
+                    { keys: ["Ctrl", "I"], desc: "선택 반전" },
+                    { keys: ["Shift", "L"], desc: "연결된 것 선택" },
+                    { keys: ["Shift", "G"], desc: "유사한 것 선택" },
+                    { keys: ["Alt", "LMB"], desc: "여러 개 중 선택" }
+                ]
+            },
+            {
+                category: "shading",
+                title: "셰이딩 (3D 뷰포트)",
+                icon: "🎨",
+                shortcuts: [
+                    { keys: ["Z"], desc: "셰이딩 파이 메뉴" },
+                    { keys: ["Alt", "Z"], desc: "X-Ray 토글" }
+                ]
+            },
+            {
+                category: "pie",
+                title: "파이 메뉴",
+                icon: "🥧",
+                shortcuts: [
+                    { keys: ["."], desc: "피벗 포인트 파이 메뉴" },
+                    { keys: ["Shift", "S"], desc: "스냅 파이 메뉴" },
+                    { keys: [","], desc: "오리엔테이션 파이 메뉴" }
+                ]
+            },
+            {
+                category: "editselect",
+                title: "선택 (편집 모드)",
+                icon: "✏️",
+                shortcuts: [
+                    { keys: ["Ctrl", "L"], desc: "연결된 메시 선택" },
+                    { keys: ["L"], desc: "커서 아래 연결된 메시 선택" },
+                    { keys: ["Alt", "LMB"], desc: "엣지 루프 선택" },
+                    { keys: ["Ctrl", "Alt", "RMB"], desc: "엣지 링 선택" },
+                    { keys: ["1"], desc: "버텍스 선택 모드" },
+                    { keys: ["2"], desc: "엣지 선택 모드" },
+                    { keys: ["3"], desc: "페이스 선택 모드" },
+                    { keys: ["Ctrl", "Shift", "M"], desc: "현재 선택 미러" },
+                    { keys: ["Ctrl", "+/-"], desc: "선택 확장/축소" },
+                    { keys: ["Ctrl", "E"], desc: "엣지 크리스" }
+                ]
+            },
+            {
+                category: "curve",
+                title: "커브 편집 (편집 모드)",
+                icon: "〰️",
+                shortcuts: [
+                    { keys: ["E", "또는", "Ctrl+RMB"], desc: "새 핸들 추가" },
+                    { keys: ["V"], desc: "핸들 타입 변경" },
+                    { keys: ["Ctrl", "X"], desc: "연결 유지하며 삭제" },
+                    { keys: ["Alt", "C"], desc: "커브 닫기" },
+                    { keys: ["Ctrl", "T"], desc: "틸트" },
+                    { keys: ["Alt", "T"], desc: "틸트 초기화" }
+                ]
+            },
+            {
+                category: "modeling",
+                title: "모델링 (편집 모드)",
+                icon: "🔧",
+                shortcuts: [
+                    { keys: ["E"], desc: "돌출 (Extrude)" },
+                    { keys: ["I"], desc: "면 삽입 (Inset)" },
+                    { keys: ["Ctrl", "B"], desc: "베벨" },
+                    { keys: ["Ctrl", "Shift", "B"], desc: "버텍스 베벨" },
+                    { keys: ["Ctrl", "R"], desc: "루프 컷" },
+                    { keys: ["G", "G"], desc: "버텍스/엣지 슬라이드" },
+                    { keys: ["K"], desc: "나이프" },
+                    { keys: ["F"], desc: "면 채우기" },
+                    { keys: ["Ctrl", "Shift", "Alt", "S"], desc: "전단 (Shear)" },
+                    { keys: ["Shift", "W"], desc: "굽히기 (Bend)" },
+                    { keys: ["Y"], desc: "분할 (Split)" },
+                    { keys: ["V"], desc: "찢기 (Rip)" },
+                    { keys: ["Alt", "V"], desc: "채우며 찢기" },
+                    { keys: ["M"], desc: "병합 (Merge)" },
+                    { keys: ["Shift", "N"], desc: "노멀 재계산" },
+                    { keys: ["Ctrl", "Shift", "N"], desc: "노멀 반전" },
+                    { keys: ["O"], desc: "비례 편집 On/Off" },
+                    { keys: ["Shift", "O"], desc: "비례 편집 감쇠 타입" },
+                    { keys: ["P"], desc: "새 오브젝트로 분리" }
+                ]
+            },
+            {
+                category: "texture",
+                title: "텍스처링 (편집 모드)",
+                icon: "🖼️",
+                shortcuts: [
+                    { keys: ["U"], desc: "언랩" },
+                    { keys: ["Ctrl", "E"], desc: "심 마크" }
+                ]
+            },
+            {
+                category: "uv",
+                title: "UV 에디터",
+                icon: "📐",
+                shortcuts: [
+                    { keys: ["L", "또는", "Ctrl+L"], desc: "아일랜드 선택" },
+                    { keys: ["V"], desc: "스티치" },
+                    { keys: ["Shift", "W"], desc: "웰드" },
+                    { keys: ["P"], desc: "핀" },
+                    { keys: ["Alt", "P"], desc: "핀 해제" },
+                    { keys: ["Shift", "P"], desc: "핀된 것 선택" }
+                ]
+            },
+            {
+                category: "image",
+                title: "이미지 에디터",
+                icon: "🖼️",
+                shortcuts: [
+                    { keys: ["N"], desc: "속성, 스코프, 슬롯, 메타데이터" },
+                    { keys: ["Numpad 1"], desc: "100%로 보기" },
+                    { keys: ["Shift", "Home"], desc: "맞춤 보기" },
+                    { keys: ["J"], desc: "다음 렌더 슬롯" },
+                    { keys: ["Alt", "J"], desc: "이전 렌더 슬롯" },
+                    { keys: ["1-8"], desc: "렌더 슬롯 선택" },
+                    { keys: ["Alt", "S"], desc: "이미지 저장" },
+                    { keys: ["Shift", "S"], desc: "다른 이름으로 저장" },
+                    { keys: ["Alt", "N"], desc: "새 빈 이미지 생성" },
+                    { keys: ["Alt", "O"], desc: "이미지 열기" },
+                    { keys: ["F"], desc: "브러시 크기" },
+                    { keys: ["Shift", "F"], desc: "브러시 강도" },
+                    { keys: ["S"], desc: "색상 샘플" },
+                    { keys: ["X"], desc: "색상 전환" }
+                ]
+            },
+            {
+                category: "nodes",
+                title: "노드 (머티리얼/컴포지터)",
+                icon: "🔗",
+                shortcuts: [
+                    { keys: ["Ctrl", "RMB(드래그)"], desc: "연결 끊기" },
+                    { keys: ["F"], desc: "선택 연결" },
+                    { keys: ["N"], desc: "속성" },
+                    { keys: ["Ctrl", "X"], desc: "연결 유지하며 삭제" },
+                    { keys: ["Ctrl", "Shift", "D"], desc: "연결 유지하며 복제" },
+                    { keys: ["M"], desc: "선택 뮤트" },
+                    { keys: ["Ctrl", "G"], desc: "선택 그룹화" },
+                    { keys: ["Ctrl", "Alt", "G"], desc: "그룹 해제" },
+                    { keys: ["TAB"], desc: "그룹 진입/나가기" },
+                    { keys: ["Ctrl", "J"], desc: "선택 노드 프레임" },
+                    { keys: ["Ctrl", "H"], desc: "비활성 노드 슬롯 표시/숨기기" },
+                    { keys: ["Alt", "MMB"], desc: "배경 이동" },
+                    { keys: ["V", "/", "Alt+V"], desc: "배경 줌" }
+                ]
+            },
+            {
+                category: "sculpt",
+                title: "스컬핑",
+                icon: "🗿",
+                shortcuts: [
+                    { keys: ["Shift", "Space"], desc: "브러시 선택" },
+                    { keys: ["F"], desc: "브러시 크기" },
+                    { keys: ["Shift", "F"], desc: "브러시 강도" },
+                    { keys: ["Ctrl", "F"], desc: "브러시 각도" },
+                    { keys: ["R"], desc: "각도 조절" },
+                    { keys: ["E"], desc: "스트로크 조절" },
+                    { keys: ["B"], desc: "마스크 (박스)" },
+                    { keys: ["M"], desc: "마스크 (브러시)" },
+                    { keys: ["Alt", "M"], desc: "마스크 지우기" },
+                    { keys: ["Ctrl", "I"], desc: "마스크 반전" },
+                    { keys: ["H"], desc: "숨기기 (박스)" }
+                ]
+            },
+            {
+                category: "render",
+                title: "렌더링",
+                icon: "🎬",
+                shortcuts: [
+                    { keys: ["F12"], desc: "렌더" },
+                    { keys: ["Ctrl", "F12"], desc: "애니메이션 렌더" },
+                    { keys: ["Ctrl", "F11"], desc: "렌더된 애니메이션 재생" },
+                    { keys: ["Ctrl", "B"], desc: "렌더 영역 설정" },
+                    { keys: ["Ctrl", "Alt", "B"], desc: "렌더 영역 해제" }
+                ]
+            },
+            {
+                category: "animation",
+                title: "애니메이션",
+                icon: "🎞️",
+                shortcuts: [
+                    { keys: ["Space"], desc: "재생/정지" },
+                    { keys: ["Ctrl", "Shift", "Space"], desc: "역재생" },
+                    { keys: ["Alt", "Scroll"], desc: "프레임 스크롤" },
+                    { keys: ["←", "/", "→"], desc: "이전/다음 프레임" },
+                    { keys: ["Shift", "←/→"], desc: "처음/마지막 프레임" },
+                    { keys: ["↑", "/", "↓"], desc: "키프레임으로 점프" },
+                    { keys: ["I"], desc: "현재 프레임에 키프레임 추가" },
+                    { keys: ["Alt", "I"], desc: "현재 프레임 키프레임 삭제" },
+                    { keys: ["Ctrl", "TAB"], desc: "도프시트 토글" },
+                    { keys: ["Ctrl", "T"], desc: "프레임/초 토글" },
+                    { keys: ["Home", "또는", "Numpad ."], desc: "활성 키프레임에 맞춤" },
+                    { keys: ["T"], desc: "키프레임 보간 설정" },
+                    { keys: ["V"], desc: "키프레임 핸들 타입" },
+                    { keys: ["Shift", "E"], desc: "키프레임 외삽 설정" },
+                    { keys: ["Ctrl", "M"], desc: "키프레임 미러" },
+                    { keys: ["P", "+", "LMB(드래그)"], desc: "프리뷰 범위 설정" },
+                    { keys: ["Ctrl", "Alt", "P"], desc: "프리뷰 범위 자동 설정" },
+                    { keys: ["Alt", "P"], desc: "프리뷰 해제" },
+                    { keys: ["M"], desc: "마커" },
+                    { keys: ["Ctrl", "M"], desc: "마커 이름 변경" },
+                    { keys: ["Ctrl", "B"], desc: "선택 카메라를 마커에 바인딩" },
+                    { keys: ["[", "/", "]"], desc: "현재 프레임 전/후 키프레임 선택" },
+                    { keys: ["Ctrl", "K"], desc: "현재 프레임의 모든 키프레임 선택" },
+                    { keys: ["Ctrl", "RMB"], desc: "커서에 키프레임 추가" },
+                    { keys: ["TAB"], desc: "선택 채널 잠금" }
+                ]
+            },
+            {
+                category: "rigging",
+                title: "리깅 (아마추어)",
+                icon: "🦴",
+                shortcuts: [
+                    { keys: ["E"], desc: "새 본 추가" },
+                    { keys: ["Shift", "D"], desc: "본 복제" },
+                    { keys: ["Shift", "W"], desc: "본 설정" },
+                    { keys: ["Ctrl", "R"], desc: "롤" },
+                    { keys: ["Alt", "R"], desc: "롤 초기화" },
+                    { keys: ["Shift", "N"], desc: "롤 재계산" },
+                    { keys: ["Ctrl", "Alt", "A"], desc: "본 정렬" },
+                    { keys: ["Alt", "F"], desc: "본 방향 전환" },
+                    { keys: ["Ctrl", "X"], desc: "본 녹이기" },
+                    { keys: ["Y"], desc: "분할" },
+                    { keys: ["P"], desc: "분리" },
+                    { keys: ["]", "/", "["], desc: "계층 스크롤" }
+                ]
+            },
+            {
+                category: "posing",
+                title: "포징 모드",
+                icon: "🏃",
+                shortcuts: [
+                    { keys: ["I"], desc: "키프레임 추가" },
+                    { keys: ["Alt", "G"], desc: "위치 초기화" },
+                    { keys: ["Alt", "R"], desc: "회전 초기화" },
+                    { keys: ["Alt", "S"], desc: "크기 초기화" },
+                    { keys: ["Ctrl", "A"], desc: "포즈 적용" },
+                    { keys: ["Alt", "P"], desc: "포즈 전파" },
+                    { keys: ["Ctrl", "E"], desc: "브레이크다운에서 포즈 밀기" },
+                    { keys: ["Alt", "E"], desc: "브레이크다운으로 포즈 릴렉스" },
+                    { keys: ["Shift", "E"], desc: "포즈 브레이크다우너" },
+                    { keys: ["Ctrl", "C"], desc: "포즈 복사" },
+                    { keys: ["Ctrl", "V"], desc: "포즈 붙여넣기" },
+                    { keys: ["Shift", "I"], desc: "IK 추가" },
+                    { keys: ["Shift", "L"], desc: "포즈 라이브러리에 추가" },
+                    { keys: ["Ctrl", "Shift", "V"], desc: "반전 포즈 붙여넣기" },
+                    { keys: ["Ctrl", "Shift", "C"], desc: "컨스트레인트 추가" }
+                ]
+            },
+            {
+                category: "window",
+                title: "창 일반",
+                icon: "🪟",
+                shortcuts: [
+                    { keys: ["T"], desc: "툴바" },
+                    { keys: ["N"], desc: "속성 바" },
+                    { keys: ["Ctrl", "Space"], desc: "영역 최대화 (툴바 유지)" },
+                    { keys: ["Ctrl", "Alt", "Space"], desc: "전체 화면" },
+                    { keys: ["Ctrl", "Alt", "Q"], desc: "쿼드 뷰" },
+                    { keys: ["Shift", "F2"], desc: "동영상 클립으로 변경" },
+                    { keys: ["Shift", "F3"], desc: "노드로 변경" },
+                    { keys: ["Shift", "F4"], desc: "파이썬 콘솔로 변경" },
+                    { keys: ["Shift", "F5"], desc: "3D 뷰포트로 변경" },
+                    { keys: ["Shift", "F6"], desc: "그래프로 변경" },
+                    { keys: ["Shift", "F7"], desc: "속성으로 변경" },
+                    { keys: ["Shift", "F8"], desc: "비디오 시퀀서로 변경" },
+                    { keys: ["Shift", "F9"], desc: "아웃라이너로 변경" },
+                    { keys: ["Shift", "F10"], desc: "UV/이미지로 변경" },
+                    { keys: ["Shift", "F11"], desc: "텍스트로 변경" },
+                    { keys: ["Shift", "F12"], desc: "도프시트로 변경" }
+                ]
+            }
+        ];
+
+        // 카테고리 필터 버튼 생성
+        const filterButtonsContainer = document.getElementById('filterButtons');
+        const categoryNames = {
+            general: "일반",
+            navigation: "네비게이션",
+            view: "뷰",
+            object: "오브젝트",
+            selection: "선택",
+            shading: "셰이딩",
+            pie: "파이메뉴",
+            editselect: "편집선택",
+            curve: "커브",
+            modeling: "모델링",
+            texture: "텍스처",
+            uv: "UV",
+            image: "이미지",
+            nodes: "노드",
+            sculpt: "스컬핑",
+            render: "렌더링",
+            animation: "애니메이션",
+            rigging: "리깅",
+            posing: "포징",
+            window: "창"
+        };
+
+        shortcutsData.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn';
+            btn.dataset.category = cat.category;
+            btn.textContent = categoryNames[cat.category] || cat.category;
+            filterButtonsContainer.appendChild(btn);
+        });
+
+        // 단축키 렌더링
+        function renderShortcuts(data) {
+            const container = document.getElementById('shortcutsContainer');
+            container.innerHTML = '';
+
+            data.forEach((category, index) => {
+                const section = document.createElement('div');
+                section.className = `category-section cat-${category.category}`;
+                section.dataset.category = category.category;
+                section.style.animationDelay = `${index * 0.05}s`;
+
+                let shortcutsHTML = category.shortcuts.map(shortcut => {
+                    const keysHTML = shortcut.keys.map(key => {
+                        if (['또는', '→', '+', '/'].includes(key)) {
+                            return `<span class="key-separator">${key}</span>`;
+                        }
+                        return `<span class="key">${key}</span>`;
+                    }).join('');
+
+                    return `
+                        <div class="shortcut-item">
+                            <span class="shortcut-description">${shortcut.desc}</span>
+                            <div class="shortcut-keys">${keysHTML}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                section.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-icon">${category.icon}</div>
+                        <h2 class="category-title">${category.title}</h2>
+                    </div>
+                    <div class="shortcut-list">
+                        ${shortcutsHTML}
+                    </div>
+                `;
+
+                container.appendChild(section);
+            });
+
+            // 통계 업데이트
+            const totalShortcuts = data.reduce((sum, cat) => sum + cat.shortcuts.length, 0);
+            document.getElementById('totalShortcuts').textContent = totalShortcuts;
+            document.getElementById('totalCategories').textContent = data.length;
+        }
+
+        // 초기 렌더링
+        renderShortcuts(shortcutsData);
+
+        // 검색 및 필터
+        const searchInput = document.getElementById('searchInput');
+        const noResults = document.getElementById('noResults');
+        const shortcutsContainer = document.getElementById('shortcutsContainer');
+        let currentCategory = 'all';
+
+        searchInput.addEventListener('input', () => filterShortcuts());
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                filterShortcuts();
+            });
+        });
+
+        function filterShortcuts() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const sections = document.querySelectorAll('.category-section');
+            let hasResults = false;
+
+            sections.forEach(section => {
+                const sectionCategory = section.dataset.category;
+                const items = section.querySelectorAll('.shortcut-item');
+                let sectionHasVisibleItems = false;
+
+                if (currentCategory !== 'all' && sectionCategory !== currentCategory) {
+                    section.classList.add('hidden');
+                    return;
+                }
+
+                items.forEach(item => {
+                    const description = item.querySelector('.shortcut-description').textContent.toLowerCase();
+                    const keys = Array.from(item.querySelectorAll('.key'))
+                        .map(k => k.textContent.toLowerCase())
+                        .join(' ');
+
+                    if (description.includes(searchTerm) || keys.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                        sectionHasVisibleItems = true;
+                        hasResults = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                if (sectionHasVisibleItems) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+
+            if (hasResults) {
+                shortcutsContainer.classList.remove('hidden');
+                noResults.classList.add('hidden');
+            } else {
+                shortcutsContainer.classList.add('hidden');
+                noResults.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
