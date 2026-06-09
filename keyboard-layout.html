@@ -7,19 +7,22 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-key: #2d3748;
-            --bg-key-hover: #4a5568;
-            --accent-orange: #f97316;
-            --accent-blue: #06b6d4;
-            --accent-purple: #a855f7;
-            --accent-green: #22c55e;
-            --accent-yellow: #eab308;
-            --accent-pink: #ec4899;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border: #475569;
+            /* Blender Dark Theme */
+            --bg-primary: #1D1D1D;
+            --bg-secondary: #303030;
+            --bg-key: #424242;
+            --bg-key-hover: #4A4A4A;
+            --accent-orange: #ED5B17;
+            --accent-blue: #5680C2;
+            --accent-purple: #9A5ACB;
+            --accent-green: #5AA02C;
+            --accent-yellow: #E5AC00;
+            --accent-pink: #C75D8C;
+            --accent-select: #ED9E28;
+            --text-primary: #E0E0E0;
+            --text-secondary: #909090;
+            --border: #232323;
+            --border-light: #4A4A4A;
         }
 
         * {
@@ -30,7 +33,7 @@
 
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: auto;
@@ -64,10 +67,7 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 2.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--accent-orange), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #E0E0E0;
         }
 
         .version-badge {
@@ -117,25 +117,25 @@
 
         .mode-btn {
             padding: 10px 25px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
             background: var(--bg-key);
             color: var(--text-primary);
             font-family: 'Noto Sans KR', sans-serif;
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .mode-btn:hover {
-            border-color: var(--accent-blue);
+            background: #505050;
         }
 
         .mode-btn.active {
             background: var(--accent-blue);
             border-color: var(--accent-blue);
-            color: #000;
+            color: #FFFFFF;
         }
 
         .keyboard-container {
@@ -144,8 +144,9 @@
             align-items: center;
             gap: 8px;
             padding: 30px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             margin: 20px auto;
             max-width: 1400px;
             overflow-x: auto;
@@ -161,30 +162,31 @@
             min-width: 70px;
             height: 70px;
             background: var(--bg-key);
-            border: 2px solid var(--border);
-            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             padding: 5px;
         }
 
         .key:hover {
-            transform: translateY(-3px);
+            background: #505050;
             border-color: var(--accent-blue);
-            box-shadow: 0 5px 20px rgba(6, 182, 212, 0.3);
             z-index: 10;
         }
 
         .key.has-shortcut {
             border-color: var(--accent-orange);
+            background: #4A4030;
         }
 
         .key.has-shortcut:hover {
-            border-color: var(--accent-blue);
+            border-color: var(--accent-select);
+            background: #505040;
         }
 
         .key-label {
@@ -230,9 +232,9 @@
             bottom: calc(100% + 10px);
             left: 50%;
             transform: translateX(-50%);
-            background: var(--bg-secondary);
-            border: 2px solid var(--accent-blue);
-            border-radius: 10px;
+            background: #3A3A3A;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
             padding: 12px 15px;
             min-width: 250px;
             max-width: 350px;
@@ -303,16 +305,15 @@
             margin-top: 20px;
             padding: 12px 25px;
             background: var(--accent-orange);
-            color: #000;
+            color: #FFFFFF;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 4px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .nav-link:hover {
-            background: var(--accent-blue);
-            transform: translateY(-2px);
+            background: #FF7030;
         }
 
         footer {

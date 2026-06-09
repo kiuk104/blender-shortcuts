@@ -48,9 +48,9 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(rgba(78, 205, 196, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(78, 205, 196, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+                linear-gradient(rgba(66, 66, 66, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(66, 66, 66, 0.15) 1px, transparent 1px);
+            background-size: 40px 40px;
             z-index: -1;
         }
 
@@ -85,12 +85,13 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: clamp(2rem, 5vw, 4rem);
             font-weight: 900;
-            background: linear-gradient(135deg, var(--accent-orange), var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #E0E0E0;
             letter-spacing: -2px;
             animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 span.highlight {
+            color: #ED5B17;
         }
 
         @keyframes fadeInDown {
@@ -113,7 +114,7 @@
             position: sticky;
             top: 10px;
             z-index: 100;
-            background: rgba(10, 14, 26, 0.95);
+            background: rgba(48, 48, 48, 0.98);
             padding: 15px;
             border-radius: 16px;
             backdrop-filter: blur(10px);
@@ -241,7 +242,8 @@
 
         .shortcut-item:hover {
             transform: translateX(5px);
-            background: rgba(78, 205, 196, 0.1);
+            background: rgba(86, 128, 194, 0.15);
+            border-left: 3px solid var(--accent-blue);
         }
 
         .shortcut-description {
@@ -277,27 +279,27 @@
             align-items: center;
         }
 
-        /* 카테고리별 색상 */
-        .cat-general .category-icon { background: linear-gradient(135deg, #ff6b35, #ff8f6b); }
-        .cat-navigation .category-icon { background: linear-gradient(135deg, #4ecdc4, #7eddd6); }
-        .cat-view .category-icon { background: linear-gradient(135deg, #a855f7, #c084fc); }
-        .cat-object .category-icon { background: linear-gradient(135deg, #22c55e, #4ade80); }
-        .cat-selection .category-icon { background: linear-gradient(135deg, #eab308, #facc15); }
-        .cat-shading .category-icon { background: linear-gradient(135deg, #ec4899, #f472b6); }
-        .cat-pie .category-icon { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
-        .cat-editselect .category-icon { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
-        .cat-curve .category-icon { background: linear-gradient(135deg, #f97316, #fb923c); }
-        .cat-modeling .category-icon { background: linear-gradient(135deg, #14b8a6, #2dd4bf); }
-        .cat-texture .category-icon { background: linear-gradient(135deg, #d946ef, #e879f9); }
-        .cat-uv .category-icon { background: linear-gradient(135deg, #0ea5e9, #38bdf8); }
-        .cat-image .category-icon { background: linear-gradient(135deg, #84cc16, #a3e635); }
-        .cat-nodes .category-icon { background: linear-gradient(135deg, #f43f5e, #fb7185); }
-        .cat-sculpt .category-icon { background: linear-gradient(135deg, #6366f1, #818cf8); }
-        .cat-render .category-icon { background: linear-gradient(135deg, #ef4444, #f87171); }
-        .cat-animation .category-icon { background: linear-gradient(135deg, #10b981, #34d399); }
-        .cat-rigging .category-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
-        .cat-posing .category-icon { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
-        .cat-window .category-icon { background: linear-gradient(135deg, #64748b, #94a3b8); }
+        /* Blender 스타일 카테고리 색상 */
+        .cat-general .category-icon { background: #ED5B17; }
+        .cat-navigation .category-icon { background: #5680C2; }
+        .cat-view .category-icon { background: #9A5ACB; }
+        .cat-object .category-icon { background: #5AA02C; }
+        .cat-selection .category-icon { background: #E5AC00; }
+        .cat-shading .category-icon { background: #C75D8C; }
+        .cat-pie .category-icon { background: #4B9FD6; }
+        .cat-editselect .category-icon { background: #8B7FC7; }
+        .cat-curve .category-icon { background: #D97430; }
+        .cat-modeling .category-icon { background: #3D8F8F; }
+        .cat-texture .category-icon { background: #B050B0; }
+        .cat-uv .category-icon { background: #4A90C2; }
+        .cat-image .category-icon { background: #7AAA2D; }
+        .cat-nodes .category-icon { background: #C15050; }
+        .cat-sculpt .category-icon { background: #6A6AD0; }
+        .cat-render .category-icon { background: #D04040; }
+        .cat-animation .category-icon { background: #40A070; }
+        .cat-rigging .category-icon { background: #D09020; }
+        .cat-posing .category-icon { background: #9060C0; }
+        .cat-window .category-icon { background: #606060; }
 
         .no-results {
             text-align: center;
@@ -335,22 +337,22 @@
             align-items: center;
             gap: 10px;
             padding: 12px 25px;
-            background: linear-gradient(135deg, var(--accent-orange), var(--accent-blue));
+            background: #ED5B17;
             border: none;
-            border-radius: 12px;
-            color: #000;
+            border-radius: 6px;
+            color: #FFFFFF;
             font-family: 'Noto Sans KR', sans-serif;
             font-size: 1rem;
             font-weight: 700;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .view-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.4);
+            background: #FF7030;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
         }
 
         .btn-icon {
