@@ -7,18 +7,24 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0e1a;
-            --bg-secondary: #151926;
-            --bg-tertiary: #1e2433;
-            --accent-orange: #ff6b35;
-            --accent-blue: #4ecdc4;
-            --accent-purple: #a855f7;
-            --accent-pink: #ec4899;
-            --accent-green: #22c55e;
-            --accent-yellow: #eab308;
-            --text-primary: #e4e4e7;
-            --text-secondary: #a1a1aa;
-            --border: #2a3142;
+            /* Blender Dark Theme */
+            --bg-primary: #1D1D1D;
+            --bg-secondary: #303030;
+            --bg-tertiary: #424242;
+            --bg-panel: #353535;
+            --accent-orange: #ED5B17;
+            --accent-blue: #5680C2;
+            --accent-select: #ED9E28;
+            --accent-purple: #9A5ACB;
+            --accent-pink: #C75D8C;
+            --accent-green: #5AA02C;
+            --accent-yellow: #E5AC00;
+            --accent-red: #C15050;
+            --text-primary: #E0E0E0;
+            --text-secondary: #909090;
+            --text-dim: #686868;
+            --border: #232323;
+            --border-light: #4A4A4A;
         }
 
         * {
@@ -318,6 +324,39 @@
             flex-wrap: wrap;
         }
 
+        .view-toggle {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .view-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-blue));
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .view-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-icon {
+            font-size: 1.3rem;
+        }
+
         .stat-item {
             text-align: center;
         }
@@ -415,6 +454,13 @@
                     <div class="stat-number" id="totalCategories">0</div>
                     <div class="stat-label">카테고리</div>
                 </div>
+            </div>
+
+            <div class="view-toggle">
+                <a href="keyboard-layout.html" class="view-btn keyboard-btn">
+                    <span class="btn-icon">⌨️</span>
+                    <span>키보드 레이아웃으로 보기</span>
+                </a>
             </div>
         </header>
 
