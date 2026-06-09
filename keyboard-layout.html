@@ -133,9 +133,22 @@
         }
 
         .mode-btn.active {
+            color: #FFFFFF;
+        }
+
+        .mode-btn[data-mode="object"].active {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+        }
+
+        .mode-btn[data-mode="edit"].active {
             background: var(--accent-blue);
             border-color: var(--accent-blue);
-            color: #FFFFFF;
+        }
+
+        .mode-btn[data-mode="sculpt"].active {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
         }
 
         .keyboard-container {
@@ -188,6 +201,42 @@
         .key.has-shortcut:hover {
             border-color: var(--accent-select);
             background: #505040;
+        }
+
+        /* 모드별 키 색상 */
+        .key.mode-object.has-shortcut {
+            border-color: var(--accent-orange);
+            background: #4A3D30;
+        }
+        .key.mode-object.has-shortcut:hover {
+            border-color: #FF7030;
+            background: #5A4D40;
+        }
+
+        .key.mode-edit.has-shortcut {
+            border-color: var(--accent-blue);
+            background: #303D4A;
+        }
+        .key.mode-edit.has-shortcut:hover {
+            border-color: #70A0E0;
+            background: #404D5A;
+        }
+
+        .key.mode-sculpt.has-shortcut {
+            border-color: var(--accent-purple);
+            background: #403050;
+        }
+        .key.mode-sculpt.has-shortcut:hover {
+            border-color: #B080E0;
+            background: #504060;
+        }
+
+        .key.mode-edit .key-function {
+            color: var(--accent-blue);
+        }
+
+        .key.mode-sculpt .key-function {
+            color: var(--accent-purple);
         }
 
         .key-label {
@@ -404,14 +453,194 @@
     </div>
 
     <script>
-        // 키보드 레이아웃 데이터
-        const keyboardLayout = [
+        // 현재 모드
+        let currentMode = 'object';
+
+        // 모드별 단축키 데이터
+        const modeShortcuts = {
+            // 오브젝트 모드
+            object: {
+                'Esc': { default: '작업 취소' },
+                'F3': { default: '기능 검색' },
+                'F12': { default: '렌더', ctrl: '애니메이션 렌더' },
+                '`': { default: '뷰 파이메뉴', shift: '워크/플라이 모드' },
+                '1': { alt: '렌더슬롯 1' },
+                '2': { alt: '렌더슬롯 2' },
+                '3': { alt: '렌더슬롯 3' },
+                '-': { ctrl: '선택 축소' },
+                '=': { ctrl: '선택 확장' },
+                'Tab': { default: '편집모드 전환', ctrl: '모드 파이메뉴' },
+                'Q': { default: '즐겨찾기 메뉴' },
+                'W': { shift: '커서 기준 이동' },
+                'E': { shift: '회전 모드' },
+                'R': { default: '회전' },
+                'T': { default: '툴바 토글' },
+                'Y': {},
+                'U': {},
+                'I': { default: '키프레임 삽입', alt: '키프레임 삭제' },
+                'O': { default: '비례편집 On/Off', shift: '비례편집 감쇠' },
+                'P': { ctrl: '부모 설정', alt: '부모 해제' },
+                '[': { default: '이전 키프레임' },
+                ']': { default: '다음 키프레임' },
+                'A': { default: '전체 선택', alt: '전체 해제', shift: '오브젝트 추가', ctrl: '적용 메뉴' },
+                'S': { default: '크기 조절', shift: '스냅 메뉴' },
+                'D': { shift: '복제', alt: '링크 복제' },
+                'F': {},
+                'G': { default: '이동', shift: '유사 선택' },
+                'H': { default: '숨기기', alt: '전체 표시', shift: '선택 외 숨기기' },
+                'J': { ctrl: '오브젝트 합치기' },
+                'K': {},
+                'L': { shift: '연결된 것 선택', ctrl: '데이터 링크' },
+                'Z': { default: '셰이딩 파이', alt: 'X-Ray 토글', ctrl: '실행취소' },
+                'X': { default: '삭제' },
+                'C': { default: '서클 선택', shift: '3D커서 중앙' },
+                'V': {},
+                'B': { default: '박스 선택', shift: '영역 확대 보기' },
+                'N': { default: '속성 패널' },
+                'M': { default: '컬렉션 이동' },
+                ',': { default: '오리엔테이션 파이' },
+                '.': { default: '피벗 포인트 파이' },
+                '/': {},
+                'Space': { default: '재생/정지', ctrl: '영역 최대화' },
+                'Num/': { default: '격리 보기' },
+                'Num7': { default: '탑 뷰', ctrl: '바텀 뷰' },
+                'Num1': { default: '프론트 뷰', ctrl: '백 뷰' },
+                'Num3': { default: '사이드 뷰', ctrl: '반대 사이드' },
+                'Num5': { default: '원근/직교 토글' },
+                'Num0': { default: '카메라 뷰', ctrl: '활성 카메라 설정' },
+                'Num.': { default: '선택에 포커스' },
+                'Num8': { default: '위로 회전' },
+                'Num2': { default: '아래로 회전' },
+                'Num4': { default: '왼쪽 회전' },
+                'Num6': { default: '오른쪽 회전' },
+                'Num9': { default: '반대편 뷰' }
+            },
+
+            // 편집 모드
+            edit: {
+                'Esc': { default: '선택 해제' },
+                'F3': { default: '기능 검색' },
+                'F12': { default: '렌더' },
+                '`': { default: '뷰 파이메뉴' },
+                '1': { default: '버텍스 모드' },
+                '2': { default: '엣지 모드' },
+                '3': { default: '페이스 모드' },
+                '-': { ctrl: '선택 축소' },
+                '=': { ctrl: '선택 확장' },
+                'Tab': { default: '오브젝트모드', ctrl: '모드 파이메뉴' },
+                'Q': { default: '즐겨찾기 메뉴' },
+                'W': { shift: '굽히기 (Bend)' },
+                'E': { default: '돌출 (Extrude)', shift: '면 돌출' },
+                'R': { default: '회전', ctrl: '루프컷' },
+                'T': { default: '툴바 토글' },
+                'Y': { default: '분할 (Split)' },
+                'U': { default: '언랩 메뉴' },
+                'I': { default: '면 삽입 (Inset)', ctrl: '선택 반전' },
+                'O': { default: '비례편집 On/Off', shift: '비례편집 감쇠' },
+                'P': { default: '새 오브젝트로 분리' },
+                '[': { default: '이전 키프레임' },
+                ']': { default: '다음 키프레임' },
+                'A': { default: '전체 선택', alt: '전체 해제' },
+                'S': { default: '크기 조절', shift: '스냅 메뉴', ctrl: '전단 (Shear)' },
+                'D': { default: '복제', shift: '복제', alt: '링크 복제' },
+                'F': { default: '면 채우기', alt: '뷰티 필' },
+                'G': { default: '이동', shift: '유사 선택', alt: '버텍스 그룹' },
+                'H': { default: '숨기기', alt: '전체 표시', shift: '선택 외 숨기기' },
+                'J': { default: '버텍스 연결', ctrl: '면 합치기' },
+                'K': { default: '나이프' },
+                'L': { default: '연결된 메시 선택', shift: 'UV 동기화 선택' },
+                'Z': { default: '셰이딩 파이', alt: 'X-Ray 토글', ctrl: '실행취소' },
+                'X': { default: '삭제 메뉴', ctrl: '연결 유지 삭제' },
+                'C': { default: '서클 선택', shift: '3D커서 중앙', alt: '커브 닫기' },
+                'V': { default: '찢기 (Rip)', alt: '채우며 찢기' },
+                'B': { default: '박스 선택', ctrl: '베벨' },
+                'N': { default: '속성 패널', shift: '노멀 재계산' },
+                'M': { default: '병합 (Merge)' },
+                ',': { default: '오리엔테이션 파이' },
+                '.': { default: '피벗 포인트 파이' },
+                '/': {},
+                'Space': { default: '재생/정지', ctrl: '영역 최대화' },
+                'Num/': { default: '격리 보기' },
+                'Num7': { default: '탑 뷰' },
+                'Num1': { default: '프론트 뷰' },
+                'Num3': { default: '사이드 뷰' },
+                'Num5': { default: '원근/직교 토글' },
+                'Num0': { default: '카메라 뷰' },
+                'Num.': { default: '선택에 포커스' },
+                'Num8': { default: '위로 회전' },
+                'Num2': { default: '아래로 회전' },
+                'Num4': { default: '왼쪽 회전' },
+                'Num6': { default: '오른쪽 회전' },
+                'Num9': { default: '반대편 뷰' }
+            },
+
+            // 스컬핑 모드
+            sculpt: {
+                'Esc': { default: '작업 취소' },
+                'F3': { default: '기능 검색' },
+                'F12': { default: '렌더' },
+                '`': { default: '뷰 파이메뉴' },
+                '1': { default: '뷰 슬롯 1' },
+                '2': { default: '뷰 슬롯 2' },
+                '3': { default: '뷰 슬롯 3' },
+                '-': {},
+                '=': {},
+                'Tab': { default: '오브젝트모드', ctrl: '모드 파이메뉴' },
+                'Q': { default: '즐겨찾기 메뉴' },
+                'W': { default: '드로우 브러시' },
+                'E': { default: '스네이크 훅' },
+                'R': { default: '회전' },
+                'T': { default: '툴바 토글' },
+                'Y': {},
+                'U': {},
+                'I': { default: '인플레이트 브러시' },
+                'O': {},
+                'P': { default: '핀치 브러시' },
+                '[': { default: '브러시 크기 줄이기' },
+                ']': { default: '브러시 크기 키우기' },
+                'A': { default: '마스크 전체', alt: '마스크 해제', ctrl: '마스크 반전' },
+                'S': { default: '스무스 브러시' },
+                'D': { default: '드로우 브러시' },
+                'F': { default: '브러시 크기 조절' },
+                'G': { default: '그랩 브러시' },
+                'H': { default: '마스크 숨기기', alt: '전체 표시', shift: '마스크 외 숨기기' },
+                'J': {},
+                'K': {},
+                'L': { default: '레이어 브러시' },
+                'Z': { default: '셰이딩 파이', alt: 'X-Ray 토글', ctrl: '실행취소' },
+                'X': { default: '드로우 X 미러', shift: '스트로크 드로우 방향' },
+                'C': { default: '클레이 브러시', shift: '클레이 스트립' },
+                'V': { default: '마스크 브러시' },
+                'B': { default: '블롭 브러시', ctrl: '박스 마스크' },
+                'N': { default: '속성 패널', shift: '노멀 재계산' },
+                'M': { default: '멀티레즈 레벨', ctrl: '마스크 메뉴' },
+                ',': {},
+                '.': {},
+                '/': {},
+                'Space': { default: '브러시 선택', shift: '브러시 선택', ctrl: '영역 최대화' },
+                'Num/': { default: '격리 보기' },
+                'Num7': { default: '탑 뷰' },
+                'Num1': { default: '프론트 뷰' },
+                'Num3': { default: '사이드 뷰' },
+                'Num5': { default: '원근/직교 토글' },
+                'Num0': { default: '카메라 뷰' },
+                'Num.': { default: '선택에 포커스' },
+                'Num8': { default: '위로 회전' },
+                'Num2': { default: '아래로 회전' },
+                'Num4': { default: '왼쪽 회전' },
+                'Num6': { default: '오른쪽 회전' },
+                'Num9': { default: '반대편 뷰' }
+            }
+        };
+
+        // 기본 키보드 레이아웃 (구조만)
+        const keyboardStructure = [
             // Function Row
             [
                 { key: 'Esc', width: 'esc' },
                 { key: 'F1', width: 'fn' },
                 { key: 'F2', width: 'fn' },
-                { key: 'F3', width: 'fn', shortcuts: { default: '기능 검색' } },
+                { key: 'F3', width: 'fn' },
                 { key: 'F4', width: 'fn' },
                 { key: 'F5', width: 'fn' },
                 { key: 'F6', width: 'fn' },
@@ -419,55 +648,55 @@
                 { key: 'F8', width: 'fn' },
                 { key: 'F9', width: 'fn' },
                 { key: 'F10', width: 'fn' },
-                { key: 'F11', width: 'fn', shortcuts: { ctrl: '렌더 애니 재생' } },
-                { key: 'F12', width: 'fn', shortcuts: { default: '렌더', ctrl: '애니메이션 렌더' } }
+                { key: 'F11', width: 'fn' },
+                { key: 'F12', width: 'fn' }
             ],
             // Number Row
             [
-                { key: '`', label: '~', shortcuts: { default: '뷰 파이메뉴', shift: '플라이 모드' } },
-                { key: '1', shortcuts: { default: '버텍스 모드', alt: '렌더슬롯 1' } },
-                { key: '2', shortcuts: { default: '엣지 모드', alt: '렌더슬롯 2' } },
-                { key: '3', shortcuts: { default: '페이스 모드', alt: '렌더슬롯 3' } },
-                { key: '4', shortcuts: { alt: '렌더슬롯 4' } },
-                { key: '5', shortcuts: { alt: '렌더슬롯 5' } },
-                { key: '6', shortcuts: { alt: '렌더슬롯 6' } },
-                { key: '7', shortcuts: { alt: '렌더슬롯 7' } },
-                { key: '8', shortcuts: { alt: '렌더슬롯 8' } },
+                { key: '`', label: '~' },
+                { key: '1' },
+                { key: '2' },
+                { key: '3' },
+                { key: '4' },
+                { key: '5' },
+                { key: '6' },
+                { key: '7' },
+                { key: '8' },
                 { key: '9' },
                 { key: '0' },
-                { key: '-', shortcuts: { ctrl: '선택 축소' } },
-                { key: '=', label: '+', shortcuts: { ctrl: '선택 확장' } },
+                { key: '-' },
+                { key: '=', label: '+' },
                 { key: 'Back', label: '⌫', width: 'backspace' }
             ],
             // QWERTY Row
             [
-                { key: 'Tab', width: 'tab', shortcuts: { default: '편집/오브젝트 토글', ctrl: '모드 파이메뉴', shift: '스냅 토글' } },
-                { key: 'Q', shortcuts: { default: '즐겨찾기 메뉴', ctrl: '쿼드뷰' } },
-                { key: 'W', shortcuts: { shift: '굽히기 (Bend)' } },
-                { key: 'E', shortcuts: { default: '돌출 (Extrude)', shift: '키프레임 외삽' } },
-                { key: 'R', shortcuts: { default: '회전', ctrl: '루프컷' } },
-                { key: 'T', shortcuts: { default: '툴바', ctrl: '프레임/초 토글' } },
-                { key: 'Y', shortcuts: { default: '분할 (Split)' } },
-                { key: 'U', shortcuts: { default: '언랩' } },
-                { key: 'I', shortcuts: { default: '면 삽입/키프레임', ctrl: '선택 반전', alt: '키프레임 삭제' } },
-                { key: 'O', shortcuts: { default: '비례편집 On/Off', shift: '비례편집 감쇠' } },
-                { key: 'P', shortcuts: { default: '새 오브젝트로 분리', ctrl: '부모 설정', alt: '부모 해제' } },
-                { key: '[', shortcuts: { default: '이전 키프레임 선택' } },
-                { key: ']', shortcuts: { default: '다음 키프레임 선택' } },
+                { key: 'Tab', width: 'tab' },
+                { key: 'Q' },
+                { key: 'W' },
+                { key: 'E' },
+                { key: 'R' },
+                { key: 'T' },
+                { key: 'Y' },
+                { key: 'U' },
+                { key: 'I' },
+                { key: 'O' },
+                { key: 'P' },
+                { key: '[' },
+                { key: ']' },
                 { key: '\\', label: '\\' }
             ],
             // ASDF Row
             [
                 { key: 'Caps', label: 'Caps', width: 'caps' },
-                { key: 'A', shortcuts: { default: '전체 선택', alt: '전체 해제', shift: '오브젝트 추가', ctrl: '적용' } },
-                { key: 'S', shortcuts: { default: '크기 조절', shift: '스냅 파이메뉴', alt: '이미지 저장' } },
-                { key: 'D', shortcuts: { default: '주석 (유지+드래그)', shift: '복제', alt: '링크 복제' } },
-                { key: 'F', shortcuts: { default: '면 채우기/브러시 크기' } },
-                { key: 'G', shortcuts: { default: '이동', shift: '유사한 것 선택' } },
-                { key: 'H', shortcuts: { default: '숨기기', alt: '전체 표시', shift: '선택 외 숨기기', ctrl: '노드슬롯 토글' } },
-                { key: 'J', shortcuts: { default: '다음 렌더슬롯', alt: '이전 렌더슬롯', ctrl: '오브젝트 합치기' } },
-                { key: 'K', shortcuts: { default: '나이프', ctrl: '키프레임 선택' } },
-                { key: 'L', shortcuts: { default: '연결 메시 선택', shift: '연결된 것 선택', ctrl: '속성 복사' } },
+                { key: 'A' },
+                { key: 'S' },
+                { key: 'D' },
+                { key: 'F' },
+                { key: 'G' },
+                { key: 'H' },
+                { key: 'J' },
+                { key: 'K' },
+                { key: 'L' },
                 { key: ';' },
                 { key: "'", label: "'" },
                 { key: 'Enter', width: 'enter' }
@@ -475,16 +704,16 @@
             // ZXCV Row
             [
                 { key: 'LShift', label: 'Shift', width: 'shift-l' },
-                { key: 'Z', shortcuts: { default: '셰이딩 파이메뉴', alt: 'X-Ray 토글', ctrl: '실행취소' } },
-                { key: 'X', shortcuts: { default: '삭제', ctrl: '연결유지 삭제' } },
-                { key: 'C', shortcuts: { default: '서클 선택', shift: '3D커서 중앙', alt: '커브 닫기', ctrl: '포즈 복사' } },
-                { key: 'V', shortcuts: { default: '찢기 (Rip)/핸들타입', alt: '채우며 찢기', ctrl: '포즈 붙여넣기' } },
-                { key: 'B', shortcuts: { default: '박스 선택', shift: '영역 확대', ctrl: '베벨/렌더 영역', alt: '영역 마스크' } },
-                { key: 'N', shortcuts: { default: '속성 패널', shift: '노멀 재계산' } },
-                { key: 'M', shortcuts: { default: '컬렉션 이동/병합', ctrl: '마커/키프레임 미러' } },
-                { key: ',', shortcuts: { default: '오리엔테이션 파이' } },
-                { key: '.', shortcuts: { default: '피벗 포인트 파이' } },
-                { key: '/', shortcuts: { default: '격리 보기 (Numpad)' } },
+                { key: 'Z' },
+                { key: 'X' },
+                { key: 'C' },
+                { key: 'V' },
+                { key: 'B' },
+                { key: 'N' },
+                { key: 'M' },
+                { key: ',' },
+                { key: '.' },
+                { key: '/' },
                 { key: 'RShift', label: 'Shift', width: 'shift-r' }
             ],
             // Bottom Row
@@ -492,7 +721,7 @@
                 { key: 'LCtrl', label: 'Ctrl', width: 'ctrl' },
                 { key: 'Win', label: '⊞' },
                 { key: 'LAlt', label: 'Alt', width: 'alt' },
-                { key: 'Space', label: 'Space', width: 'space', shortcuts: { default: '재생/정지', shift: '브러시 선택', ctrl: '영역 최대화' } },
+                { key: 'Space', label: 'Space', width: 'space' },
                 { key: 'RAlt', label: 'Alt', width: 'alt' },
                 { key: 'Fn', label: 'Fn' },
                 { key: 'Menu', label: '☰' },
@@ -500,34 +729,47 @@
             ]
         ];
 
-        // Numpad 레이아웃
-        const numpadLayout = [
+        // Numpad 구조
+        const numpadStructure = [
             [
-                { key: 'Num/', shortcuts: { default: '격리 보기' } },
+                { key: 'Num/' },
                 { key: 'Num*' },
                 { key: 'Num-' }
             ],
             [
-                { key: 'Num7', shortcuts: { default: '탑 뷰' } },
-                { key: 'Num8', shortcuts: { default: '위로 회전' } },
-                { key: 'Num9', shortcuts: { default: '반대편 뷰' } }
+                { key: 'Num7' },
+                { key: 'Num8' },
+                { key: 'Num9' }
             ],
             [
-                { key: 'Num4', shortcuts: { default: '왼쪽 회전' } },
-                { key: 'Num5', shortcuts: { default: '원근/직교 토글' } },
-                { key: 'Num6', shortcuts: { default: '오른쪽 회전' } }
+                { key: 'Num4' },
+                { key: 'Num5' },
+                { key: 'Num6' }
             ],
             [
-                { key: 'Num1', shortcuts: { default: '프론트 뷰', ctrl: '카메라로 설정' } },
-                { key: 'Num2', shortcuts: { default: '아래로 회전' } },
-                { key: 'Num3', shortcuts: { default: '사이드 뷰' } }
+                { key: 'Num1' },
+                { key: 'Num2' },
+                { key: 'Num3' }
             ],
             [
-                { key: 'Num0', shortcuts: { default: '카메라 뷰', ctrl: '활성 카메라 설정', ctrlAlt: '카메라를 뷰로' } },
-                { key: 'Num.', shortcuts: { default: '선택에 포커스' } },
+                { key: 'Num0' },
+                { key: 'Num.' },
                 { key: 'NumEnter' }
             ]
         ];
+
+        // 모드에 따른 색상 클래스
+        const modeColors = {
+            object: 'mode-object',
+            edit: 'mode-edit',
+            sculpt: 'mode-sculpt'
+        };
+
+        // 현재 모드의 단축키 가져오기
+        function getShortcutsForKey(key) {
+            const shortcuts = modeShortcuts[currentMode];
+            return shortcuts[key] || null;
+        }
 
         // 키보드 생성
         function createKeyboard() {
@@ -536,15 +778,15 @@
 
             const mainKeyboard = document.createElement('div');
             mainKeyboard.style.display = 'flex';
-            mainKeyboard.style.gap = '30px';
+            mainKeyboard.style.gap = '20px';
 
             // 메인 키보드
             const mainSection = document.createElement('div');
             mainSection.style.display = 'flex';
             mainSection.style.flexDirection = 'column';
-            mainSection.style.gap = '6px';
+            mainSection.style.gap = '4px';
 
-            keyboardLayout.forEach(row => {
+            keyboardStructure.forEach(row => {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'keyboard-row';
 
@@ -560,18 +802,18 @@
             const numpadSection = document.createElement('div');
             numpadSection.style.display = 'flex';
             numpadSection.style.flexDirection = 'column';
-            numpadSection.style.gap = '6px';
-            numpadSection.style.marginLeft = '20px';
+            numpadSection.style.gap = '4px';
+            numpadSection.style.marginLeft = '15px';
 
             const numpadTitle = document.createElement('div');
             numpadTitle.style.textAlign = 'center';
             numpadTitle.style.color = 'var(--text-secondary)';
-            numpadTitle.style.fontSize = '0.8rem';
-            numpadTitle.style.marginBottom = '5px';
+            numpadTitle.style.fontSize = '0.7rem';
+            numpadTitle.style.marginBottom = '4px';
             numpadTitle.textContent = 'Numpad';
             numpadSection.appendChild(numpadTitle);
 
-            numpadLayout.forEach(row => {
+            numpadStructure.forEach(row => {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'keyboard-row';
 
@@ -596,8 +838,12 @@
                 keyDiv.classList.add(`key-${keyData.width}`);
             }
 
-            if (keyData.shortcuts) {
+            // 현재 모드의 단축키 가져오기
+            const shortcuts = getShortcutsForKey(keyData.key);
+
+            if (shortcuts && Object.keys(shortcuts).length > 0) {
                 keyDiv.classList.add('has-shortcut');
+                keyDiv.classList.add(modeColors[currentMode]);
             }
 
             // 키 레이블
@@ -607,29 +853,29 @@
             keyDiv.appendChild(labelDiv);
 
             // 기본 기능 표시
-            if (keyData.shortcuts && keyData.shortcuts.default) {
+            if (shortcuts && shortcuts.default) {
                 const funcDiv = document.createElement('div');
                 funcDiv.className = 'key-function';
-                funcDiv.textContent = keyData.shortcuts.default;
+                funcDiv.textContent = shortcuts.default;
                 keyDiv.appendChild(funcDiv);
             }
 
             // 모디파이어 인디케이터
-            if (keyData.shortcuts) {
+            if (shortcuts) {
                 const modDiv = document.createElement('div');
                 modDiv.className = 'modifier-indicator';
                 
-                if (keyData.shortcuts.shift) {
+                if (shortcuts.shift) {
                     const dot = document.createElement('div');
                     dot.className = 'mod-dot mod-shift';
                     modDiv.appendChild(dot);
                 }
-                if (keyData.shortcuts.ctrl) {
+                if (shortcuts.ctrl) {
                     const dot = document.createElement('div');
                     dot.className = 'mod-dot mod-ctrl';
                     modDiv.appendChild(dot);
                 }
-                if (keyData.shortcuts.alt) {
+                if (shortcuts.alt) {
                     const dot = document.createElement('div');
                     dot.className = 'mod-dot mod-alt';
                     modDiv.appendChild(dot);
@@ -641,7 +887,7 @@
             }
 
             // 툴팁
-            if (keyData.shortcuts) {
+            if (shortcuts && Object.keys(shortcuts).length > 0) {
                 const tooltip = document.createElement('div');
                 tooltip.className = 'tooltip';
 
@@ -653,20 +899,17 @@
                 const content = document.createElement('div');
                 content.className = 'tooltip-content';
 
-                if (keyData.shortcuts.default) {
-                    content.innerHTML += `<div class="tooltip-item"><span class="tooltip-key">${keyData.label || keyData.key}</span><span class="tooltip-desc">${keyData.shortcuts.default}</span></div>`;
+                if (shortcuts.default) {
+                    content.innerHTML += `<div class="tooltip-item"><span class="tooltip-key">${keyData.label || keyData.key}</span><span class="tooltip-desc">${shortcuts.default}</span></div>`;
                 }
-                if (keyData.shortcuts.shift) {
-                    content.innerHTML += `<div class="tooltip-item"><span class="tooltip-key">Shift + ${keyData.label || keyData.key}</span><span class="tooltip-desc">${keyData.shortcuts.shift}</span></div>`;
+                if (shortcuts.shift) {
+                    content.innerHTML += `<div class="tooltip-item"><span class="tooltip-key">Shift + ${keyData.label || keyData.key}</span><span class="tooltip-desc">${shortcuts.shift}</span></div>`;
                 }
-                if (keyData.shortcuts.ctrl) {
-                    content.innerHTML += `<div class="tooltip-item"><span class="tooltip-key">Ctrl + ${keyData.label || keyData.key}</span><span class="tooltip-desc">${keyData.shortcuts.ctrl}</span></div>`;
+                if (shortcuts.ctrl) {
+                    content.innerHTML += `<div class="tooltip-item"><span class="tooltip-key">Ctrl + ${keyData.label || keyData.key}</span><span class="tooltip-desc">${shortcuts.ctrl}</span></div>`;
                 }
-                if (keyData.shortcuts.alt) {
-                    content.innerHTML += `<div class="tooltip-item"><span class="tooltip-key">Alt + ${keyData.label || keyData.key}</span><span class="tooltip-desc">${keyData.shortcuts.alt}</span></div>`;
-                }
-                if (keyData.shortcuts.ctrlAlt) {
-                    content.innerHTML += `<div class="tooltip-item"><span class="tooltip-key">Ctrl+Alt + ${keyData.label || keyData.key}</span><span class="tooltip-desc">${keyData.shortcuts.ctrlAlt}</span></div>`;
+                if (shortcuts.alt) {
+                    content.innerHTML += `<div class="tooltip-item"><span class="tooltip-key">Alt + ${keyData.label || keyData.key}</span><span class="tooltip-desc">${shortcuts.alt}</span></div>`;
                 }
 
                 tooltip.appendChild(content);
@@ -676,12 +919,26 @@
             return keyDiv;
         }
 
-        // 모드 토글
+        // 모드 전환
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // 버튼 활성화 상태 변경
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.mode === mode) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 키보드 재생성
+            createKeyboard();
+        }
+
+        // 모드 버튼 이벤트
         document.querySelectorAll('.mode-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                // 여기서 모드에 따라 표시되는 단축키를 변경할 수 있습니다
+                switchMode(btn.dataset.mode);
             });
         });
 
