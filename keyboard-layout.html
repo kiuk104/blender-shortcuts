@@ -142,25 +142,26 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 30px;
+            gap: 5px;
+            padding: 25px 40px;
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 8px;
             margin: 20px auto;
-            max-width: 1400px;
+            max-width: 1600px;
+            width: 95%;
             overflow-x: auto;
         }
 
         .keyboard-row {
             display: flex;
-            gap: 6px;
+            gap: 4px;
         }
 
         .key {
             position: relative;
-            min-width: 70px;
-            height: 70px;
+            min-width: 58px;
+            height: 58px;
             background: var(--bg-key);
             border: 1px solid var(--border-light);
             border-radius: 4px;
@@ -170,7 +171,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.15s ease;
-            padding: 5px;
+            padding: 4px;
         }
 
         .key:hover {
@@ -191,18 +192,18 @@
 
         .key-label {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--text-primary);
             text-align: center;
         }
 
         .key-function {
-            font-size: 0.65rem;
+            font-size: 0.55rem;
             color: var(--accent-orange);
             text-align: center;
-            margin-top: 3px;
-            line-height: 1.2;
+            margin-top: 2px;
+            line-height: 1.1;
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -214,17 +215,17 @@
         }
 
         /* 특수 키 크기 */
-        .key-esc { min-width: 70px; }
-        .key-tab { min-width: 100px; }
-        .key-caps { min-width: 115px; }
-        .key-shift-l { min-width: 140px; }
-        .key-shift-r { min-width: 170px; }
-        .key-ctrl { min-width: 90px; }
-        .key-alt { min-width: 70px; }
-        .key-space { min-width: 400px; }
-        .key-backspace { min-width: 130px; }
-        .key-enter { min-width: 145px; }
-        .key-fn { min-width: 55px; height: 50px; }
+        .key-esc { min-width: 58px; }
+        .key-tab { min-width: 85px; }
+        .key-caps { min-width: 95px; }
+        .key-shift-l { min-width: 115px; }
+        .key-shift-r { min-width: 140px; }
+        .key-ctrl { min-width: 75px; }
+        .key-alt { min-width: 58px; }
+        .key-space { min-width: 320px; }
+        .key-backspace { min-width: 105px; }
+        .key-enter { min-width: 120px; }
+        .key-fn { min-width: 48px; height: 42px; }
 
         /* 툴팁 */
         .tooltip {
@@ -324,21 +325,27 @@
         }
 
         /* 반응형 */
-        @media (max-width: 1400px) {
+        @media (max-width: 1300px) {
             .keyboard-container {
-                transform: scale(0.85);
+                transform: scale(0.9);
                 transform-origin: top center;
             }
         }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 1100px) {
             .keyboard-container {
-                transform: scale(0.65);
+                transform: scale(0.75);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .keyboard-container {
+                transform: scale(0.6);
             }
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 1.8rem; }
+            h1 { font-size: 1.5rem; }
             .keyboard-container {
                 transform: scale(0.5);
             }
