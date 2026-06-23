@@ -287,6 +287,7 @@
         .cat-selection .category-icon { background: #E5AC00; }
         .cat-shading .category-icon { background: #C75D8C; }
         .cat-pie .category-icon { background: #4B9FD6; }
+        .cat-machin3pie .category-icon { background: #E0792E; }
         .cat-editselect .category-icon { background: #8B7FC7; }
         .cat-curve .category-icon { background: #D97430; }
         .cat-modeling .category-icon { background: #3D8F8F; }
@@ -614,6 +615,22 @@
                 ]
             },
             {
+                category: "machin3pie",
+                title: "MACHIN3tools 파이 메뉴 (애드온)",
+                icon: "🔧",
+                shortcuts: [
+                    { keys: ["Q", "또는", "Page Up"], desc: "메인 MACHIN3tools 파이" },
+                    { keys: ["Tab", "또는", "Space"], desc: "Modes 파이 (모드 전환)" },
+                    { keys: ["Shift", "S"], desc: "Cursor 파이 (기본 스냅 파이 대체)" },
+                    { keys: ["Shift", "MB5"], desc: "Snapping 파이 (마우스 옆 버튼)" },
+                    { keys: ["Shift", "E"], desc: "Transform 파이" },
+                    { keys: ["Shift", "C"], desc: "Collections 파이" },
+                    { keys: ["Page Down"], desc: "Viewport 파이" },
+                    { keys: ["Alt", "A"], desc: "Align 파이 (편집 모드)" },
+                    { keys: ["D"], desc: "Decal 파이 (DECALmachine)" }
+                ]
+            },
+            {
                 category: "editselect",
                 title: "선택 (편집 모드)",
                 icon: "✏️",
@@ -870,6 +887,7 @@
             selection: "선택",
             shading: "셰이딩",
             pie: "파이메뉴",
+            machin3pie: "MACHIN3 파이",
             editselect: "편집선택",
             curve: "커브",
             modeling: "모델링",
